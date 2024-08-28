@@ -1,0 +1,61 @@
+﻿@model ProductListViewModel
+
+@if (Model.Products == null || !Model.Products.Any())
+{
+    <div class="alert alert-danger">No products exist</div>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th colspan="4">
+                    <div class="d-flex justify-content-between">
+                        <button id="allCategoriesButton" class="btn btn-primary" type="button">All Categories</button>
+                        <a class="btn btn-primary" asp-controller="Product" asp-action="Index" asp-route-page="@Model.CurrentPage" asp-route-category="@Model.CurrentCategory" asp-route-sort="@Model.SortProduct">@Model.SortProduct</a>
+                        <a class="btn btn-primary" asp-controller="Product" asp-action="Index" asp-route-category="@Model.CurrentCategory" asp-route-lower="@Model.LowerUpperBtn">@Model.LowerUpperBtn</a>
+                    </div>
+                </th>
+            </tr>
+            <tr>
+                <th>Product Name</th>
+                <th>Unit Price</th>
+                <th>Units in Stock</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Products)
+            {
+                <tr>
+                    <td>@item.ProductName</td>
+                    <td>@item.UnitPrice</td>
+                    <td>@item.UnitsInStock</td>
+                    <td>
+                        <a class="btn btn-success btn-sm" href="/cart/add?id=@item.ProductId">Add to Cart</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <product-list-pager current-category="@Model.CurrentCategory"
+                        current-page="@Model.CurrentPage"
+                        page-count="@Model.PageCount"
+                        page-size="@Model.PageSize">
+    </product-list-pager>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+
+            var allCategoriesButton = document.getElementById('allCategoriesButton');
+
+            allCategoriesButton.addEventListener('click', function () {
+                var url = new URL(window.location.href);
+                url.searchParams.set('category', '0');
+                window.location.href = url.toString();
+            });
+
+        });
+    </script>
+}
